@@ -1,0 +1,420 @@
+openapi: 3.1.0
+info:
+  title: Qoz Platform API
+  version: 1.0.0
+  description: |
+    Single spec for qoz-vision-prod-web: Section A documents live Next.js routes;
+    Section B defines target contracts for mock domains (Repository layer).
+servers:
+  - url: http://localhost:3000
+    description: Next.js (qoz-vision-prod-web)
+  - url: http://localhost:8080
+    description: Backend (qoz-vision-prod-backend)
+
+tags:
+  - name: Auth
+  - name: Incidents
+  - name: Lessons
+  - name: Live
+  - name: Agent
+  - name: Director
+  - name: People
+  - name: Checks
+  - name: Analytics
+  - name: Hierarchy
+  - name: Exports
+  - name: KnowledgeMap
+  - name: Forecasts
+  - name: Settings
+
+paths:
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login (live)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email: { type: string, format: email }
+                password: { type: string }
+      responses:
+        "200":
+          description: Session cookie set
+        "401":
+          description: Invalid credentials
+
+  /api/auth/register:
+    post:
+      tags: [Auth]
+      summary: Register (live)
+      responses:
+        "200":
+          description: User created
+
+  /api/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout (live)
+      responses:
+        "200":
+          description: Session cleared
+
+  /api/incidents:
+    get:
+      tags: [Incidents]
+      summary: List incidents (live)
+      responses:
+        "200":
+          description: Incident list
+    post:
+      tags: [Incidents]
+      summary: Create incident (live)
+      responses:
+        "201":
+          description: Created
+
+  /api/incidents/{id}:
+    get:
+      tags: [Incidents]
+      summary: Get incident (live)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        "200":
+          description: Incident detail
+
+  /api/lessons:
+    get:
+      tags: [Lessons]
+      summary: List lessons (live)
+      responses:
+        "200":
+          description: Lesson list
+
+  /api/live/fleet:
+    get:
+      tags: [Live]
+      summary: Camera fleet (live)
+      responses:
+        "200":
+          description: Fleet snapshot
+
+  /api/live/sessions/start:
+    post:
+      tags: [Live]
+      summary: Start live session (live)
+      responses:
+        "200":
+          description: Session started
+
+  /api/agent/chat:
+    post:
+      tags: [Agent]
+      summary: Agent chat proxy (live)
+      responses:
+        "200":
+          description: Chat response
+
+  /api/director/dashboard:
+    get:
+      tags: [Director]
+      summary: Director dashboard aggregate
+      description: |
+        Live Next route; mock via MockDirectorDashboardRepository.
+        ApiDirectorDashboardRepository → future backend proxy.
+      parameters:
+        - name: period
+          in: query
+          schema:
+            type: string
+            enum: [today, week, quarter, year]
+            default: week
+        - name: schoolId
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: DirectorDashboardData
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DirectorDashboardData"
+
+  /api/director/students/{studentId}:
+    get:
+      tags: [Director]
+      summary: Student drilldown (planned)
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Student detail
+
+  /api/director/classes/{classId}:
+    get:
+      tags: [Director]
+      summary: Class drilldown (planned)
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Class detail
+
+  /api/director/security/{eventId}:
+    get:
+      tags: [Director]
+      summary: Security event (planned)
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Security event
+
+  /api/people/students:
+    get:
+      tags: [People]
+      summary: Students roster (planned)
+      responses:
+        "200":
+          description: IPeopleRepository.students module shape
+
+  /api/people/teachers:
+    get:
+      tags: [People]
+      summary: Teachers directory (planned)
+      responses:
+        "200":
+          description: IPeopleRepository.teachers module shape
+
+  /api/checks/status:
+    get:
+      tags: [Checks]
+      summary: Checks pipeline status (planned)
+      responses:
+        "200":
+          description: IChecksRepository.status module shape
+
+  /api/checks/bank:
+    get:
+      tags: [Checks]
+      summary: Question bank (planned)
+      responses:
+        "200":
+          description: IChecksRepository.bank module shape
+
+  /api/analytics/dataset:
+    get:
+      tags: [Analytics]
+      summary: Analytics dataset (planned)
+      parameters:
+        - name: date
+          in: query
+          schema: { type: string }
+        - name: room
+          in: query
+          schema: { type: string }
+        - name: classId
+          in: query
+          schema: { type: string }
+      responses:
+        "200":
+          description: AnalyticsDataset
+
+  /api/hierarchy/regions:
+    get:
+      tags: [Hierarchy]
+      summary: List regions (planned)
+      responses:
+        "200":
+          description: HierarchyRegion[]
+
+  /api/hierarchy/overview-today:
+    get:
+      tags: [Hierarchy]
+      summary: Country today snapshot (planned)
+      responses:
+        "200":
+          description: OverviewTodaySnapshot
+
+  /api/exports/options:
+    get:
+      tags: [Exports]
+      summary: Export filter options (planned)
+      responses:
+        "200":
+          description: IExportsRepository.getOptions shape
+
+  /api/exports/generate:
+    post:
+      tags: [Exports]
+      summary: Generate export file (live Next route, mock data)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportGenerateBody"
+      responses:
+        "200":
+          description: File download
+
+  /api/knowledge-map/graph:
+    get:
+      tags: [KnowledgeMap]
+      summary: Knowledge map graph (planned)
+      responses:
+        "200":
+          description: IKnowledgeMapRepository.data shape
+
+  /api/forecasts/strategic:
+    get:
+      tags: [Forecasts]
+      summary: Strategic forecasts (planned)
+      responses:
+        "200":
+          description: IForecastsRepository.dashboard shape
+
+  /api/settings/audit:
+    get:
+      tags: [Settings]
+      summary: Settings audit log (planned)
+      responses:
+        "200":
+          description: SettingsAuditRow[]
+
+components:
+  schemas:
+    DirectorPeriod:
+      type: string
+      enum: [today, week, quarter, year]
+
+    School:
+      type: object
+      required: [id, name, district, directorName]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        district: { type: string }
+        directorName: { type: string }
+        studentCount: { type: integer }
+
+    TodayMetric:
+      type: object
+      properties:
+        key: { type: string }
+        label: { type: string }
+        value: {}
+        context: { type: string }
+        status: { type: string, enum: [ok, warning, critical] }
+        source: { type: string }
+
+    DirectorDashboardData:
+      type: object
+      required: [school, period, lastUpdatedAt, todayMetrics, alerts, tasks]
+      properties:
+        school:
+          $ref: "#/components/schemas/School"
+        period:
+          $ref: "#/components/schemas/DirectorPeriod"
+        lastUpdatedAt:
+          type: string
+          format: date-time
+        todayMetrics:
+          type: array
+          items:
+            $ref: "#/components/schemas/TodayMetric"
+        alerts:
+          type: array
+          items:
+            type: object
+        tasks:
+          type: array
+          items:
+            type: object
+        academicQuality:
+          type: object
+        lessonAnalytics:
+          type: object
+        security:
+          type: object
+        teacherLoad:
+          type: object
+        infrastructure:
+          type: object
+        benchmarks:
+          type: object
+        integrations:
+          type: array
+          items:
+            type: object
+
+    ExportGenerateBody:
+      type: object
+      required: [type, format, year, quarter, territoryId, parallel]
+      properties:
+        type:
+          type: string
+          enum: [ministry, rono, nis]
+        format:
+          type: string
+          enum: [xlsx, pdf, zip]
+        year: { type: string }
+        quarter: { type: string }
+        territoryId: { type: string }
+        parallel: { type: string }
+
+    AnalyticsDataset:
+      type: object
+      properties:
+        kpi: { type: object }
+        smartClass: { type: object }
+        actions: { type: object }
+        emotions: { type: object }
+        performance: { type: object }
+        platform: { type: object }
+        safety: { type: object }
+
+  x-repository-map:
+    IDirectorDashboardRepository:
+      implementation: lib/data/mock-repositories/director-dashboard.mock-repository.ts
+      api: lib/data/api-repositories/index.ts#ApiDirectorDashboardRepository
+      route: /api/director/dashboard
+    IPeopleRepository:
+      implementation: lib/data/mock-repositories/people.mock-repository.ts
+      api: lib/data/api-repositories/index.ts#ApiPeopleRepository
+      route: /api/people/*
+    IChecksRepository:
+      implementation: lib/data/mock-repositories/checks.mock-repository.ts
+      route: /api/checks/*
+    IAnalyticsRepository:
+      implementation: lib/data/mock-repositories/analytics.mock-repository.ts
+      route: /api/analytics/dataset
+    IHierarchyRepository:
+      implementation: lib/data/mock-repositories/hierarchy.mock-repository.ts
+      route: /api/hierarchy/*
+    IExportsRepository:
+      implementation: lib/data/mock-repositories/exports.mock-repository.ts
+      route: /api/exports/*
+    IKnowledgeMapRepository:
+      implementation: lib/data/mock-repositories/knowledge-map.mock-repository.ts
+      route: /api/knowledge-map/graph
+    IForecastsRepository:
+      implementation: lib/data/mock-repositories/forecasts.mock-repository.ts
+      route: /api/forecasts/strategic

@@ -1,0 +1,12 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: qoz-offline-backend:latest
+
+  web:
+    build:
+      context: ./web
+      dockerfile: ../Dockerfile.web
+    image: qoz-offline-web:latest

@@ -1,0 +1,20 @@
+logLevel: info
+api: yes
+apiAddress: :9997
+rtspAddress: :8554
+hlsAddress: :8888
+hlsAllowOrigins: ['*']
+hlsVariant: mpegts
+hlsSegmentCount: 7
+hlsSegmentDuration: 1s
+hlsAlwaysRemux: no
+webrtc: no
+rtmp: no
+srt: no
+
+pathDefaults:
+  sourceOnDemand: yes
+  sourceOnDemandCloseAfter: 30s
+  rtspTransport: tcp
+
+paths: {}
