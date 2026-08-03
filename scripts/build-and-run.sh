@@ -95,6 +95,15 @@ docker compose -f docker-compose.offline.yml up -d --force-recreate backend ngin
 print_success "Backend restarted"
 echo ""
 
+# Import cameras backup if available
+if [ -f "cameras-backup.json" ]; then
+    print_header "Importing Cameras"
+    print_step "Importing cameras from cameras-backup.json..."
+    bash scripts/import-cameras.sh "http://127.0.0.1" "cameras-backup.json" || true
+    print_success "Camera import finished"
+    echo ""
+fi
+
 # Show status
 print_header "Service Status"
 docker compose -f docker-compose.offline.yml ps

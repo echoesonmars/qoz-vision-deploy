@@ -106,12 +106,19 @@ function probeRtsp(rtspUrl: string): Promise<{ ok: boolean; output: string }> {
 }
 
 export async function camerasCrudRoutes(app: FastifyInstance) {
-  app.get("/api/cameras", async () => {
+  app.get<{ Querystring: { organizationName?: string } }>("/api/cameras", async (req) => {
     const sql = getDb();
-    const rows = await sql<CameraRow[]>`
-      select * from public.cameras
-      order by sort_index asc, channel asc
-    `;
+    const org = req.query?.organizationName?.trim();
+    const rows = org
+      ? await sql<CameraRow[]>`
+          select * from public.cameras
+          where organization_name = ${org}
+          order by sort_index asc, channel asc
+        `
+      : await sql<CameraRow[]>`
+          select * from public.cameras
+          order by sort_index asc, channel asc
+        `;
     return { cameras: rows.map(toCameraRecord), raw: rows };
   });
 
