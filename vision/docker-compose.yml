@@ -1,0 +1,20 @@
+services:
+  qoz-vision:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./weights:/app/weights:ro
+      - ./data/faces_db:/app/data/faces_db:ro
+    environment:
+      DISABLE_BACKGROUND_STREAMS: "true"
+      RTSP_URLS: ""
+      VISION_FRAME_MAX_CONCURRENT: "1"
+      STREAM_PROCESS_EVERY_NTH_FRAME: "5"
+      USE_BASE_DETECT: "true"
+      ENABLED_MODELS: "weapon,fire_smoke,fight,smoking"
+      MODEL_VARIANT: "heavy"
+      SPECIALIZED_ROTATE_PER_FRAME: "true"
+      SPECIALIZED_PER_FRAME_MAX: "2"

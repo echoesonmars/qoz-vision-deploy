@@ -1,0 +1,66 @@
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+class Settings(BaseSettings):
+    USE_GPU: bool = True
+    GPU_INDEX: int = 0
+    API_PORT: int = 8000
+    API_HOST: str = "0.0.0.0"
+    RTSP_URLS: str = ""
+    STREAM_PROCESS_EVERY_NTH_FRAME: int = 5
+    STREAM_AFTER_FRAME_SLEEP_SEC: float = 0.04
+    STREAM_URLS: str = ""
+    DISABLE_BACKGROUND_STREAMS: bool = False
+    VISION_INTERNAL_SECRET: str = ""
+    WEIGHTS_DIR: str = "weights"
+    EXTERNAL_SELECTED_DIR: str = "weights/external/selected"
+    WEIGHTS_SOURCE: str = "qoz"
+    MODEL_VARIANT: str = "heavy"
+    QOZ_MA_MODEL: str = "weights/qoz/ma/qoz-critical.pt"
+    QOZ_MB_MODEL: str = "weights/qoz/mb/qoz-conduct.pt"
+    QOZ_MC_MODEL: str = "weights/qoz/mc/qoz-perimeter.pt"
+    QOZ_ENABLED_MODELS: str = "qoz_ma,qoz_mb,qoz_mc"
+    QOZ_AUX_MODELS: bool = False
+    ENABLED_MODELS: str = "weapon,fire_smoke,fight,smoking"
+    RUNTIME_PROFILE: str = "single_stream_optimized"
+    CAMERA_ZONE_MAP: str = ""
+    RUN_ALL_SPECIALIZED: bool = True
+    USE_BASE_DETECT: bool = True
+    SPECIALIZED_INFERENCE_WORKERS: int = 1
+    SPECIALIZED_ROTATE_PER_FRAME: bool = True
+    SPECIALIZED_PER_FRAME_MAX: int = 2
+    DETECTION_CONF: float = 0.25
+    VISION_FRAME_MAX_CONCURRENT: int = 1
+    VISION_VIDEO_MAX_CONCURRENT: int = 1
+    VIDEO_ANALYZE_MAX_BYTES: int = 512 * 1024 * 1024
+    VIDEO_ANALYZE_MAX_FRAMES: int = 0
+    INFERENCE_IMGSZ: int = 640
+    HEUR_PHONE_CONF: float = 0.45
+    HEUR_PHONE_DEBOUNCE: int = 3
+    HEUR_SLEEP_Y_OFFSET: float = 15.0
+    HEUR_SLEEP_DEBOUNCE: int = 3
+    HEUR_CROWD_MIN_CLASSROOM: int = 8
+    HEUR_CROWD_MIN_CORRIDOR: int = 5
+    HEUR_CROWD_MIN_DEFAULT: int = 6
+    HEUR_CROWD_DEBOUNCE: int = 2
+    HEUR_FALL_ASPECT: float = 1.25
+    HEUR_FALL_DEBOUNCE: int = 2
+    HEUR_BAGGAGE_NEAR_PX: int = 120
+    HEUR_BAGGAGE_MIN_SEC: float = 10.0
+    HEUR_FUSION_ENABLED: bool = True
+    HEUR_FUSION_BONUS: float = 0.15
+    HEUR_FUSION_MODEL_DEBOUNCE: int = 5
+    HEUR_FUSION_MIN_CONF: float = 0.40
+    HEUR_FUSION_LEGACY_PRIMARY: bool = False
+    BACKEND_PUSH_URL: str = ""
+    BACKEND_INTERNAL_SECRET: str = ""
+    LIVE_DRIVER_PUSH_TIMEOUT_SEC: float = 90.0
+    LIVE_DRIVER_ANALYZE_EVERY_DECODE: bool = False
+    LIVE_DRIVER_MIN_PUSH_GAP_MS: int = 250
+    LIVE_DRIVER_LOOP_YIELD_SEC: float = 0.002
+    TRANSCRIBE_MODE: str = "auto"
+    WHISPER_MODEL_PATH: str = ""
+    WHISPER_DEVICE: str = "cuda"
+    WHISPER_COMPUTE_TYPE: str = "int8"
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+settings = Settings()

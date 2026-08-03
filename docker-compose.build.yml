@@ -1,7 +1,7 @@
 services:
   vision:
     build:
-      context: ../qoz-vision
+      context: ./vision
       dockerfile: Dockerfile
     image: qoz-offline-vision:latest
 

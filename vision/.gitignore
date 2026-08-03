@@ -1,0 +1,21 @@
+venv/
+.cache/
+.tmp/
+.pip-cache/
+.env
+__pycache__/
+*.py[cod]
+.DS_Store
+._*
+*.mp4
+*.log
+*.zip
+_download_log.txt
+data/faces_db/*
+!data/faces_db/.gitkeep
+
+# Weights & models
+*.pt
+weights/**/*.pt
+!weights/manifest.json
+!weights/**/.gitkeep

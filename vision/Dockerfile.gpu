@@ -1,0 +1,28 @@
+FROM pytorch/pytorch:2.6.0-cuda12.4-cudnn9-runtime
+
+WORKDIR /app
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    libgl1 \
+    libglib2.0-0 \
+    ffmpeg \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements-docker.gpu.txt ./
+RUN pip install --no-cache-dir -r requirements-docker.gpu.txt
+
+COPY . .
+
+ENV API_HOST=0.0.0.0
+ENV API_PORT=8000
+ENV DISABLE_BACKGROUND_STREAMS=true
+ENV RTSP_URLS=
+ENV USE_GPU=true
+ENV TRANSCRIBE_MODE=live
+ENV WHISPER_DEVICE=cpu
+ENV WHISPER_COMPUTE_TYPE=int8
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

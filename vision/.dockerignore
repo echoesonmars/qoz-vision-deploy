@@ -1,0 +1,14 @@
+venv
+__pycache__
+.git
+.env
+.env.*
+!.env.example
+*.md
+weights
+data
+.cache
+.cursor
+mcps
+*.pt
+_download_log.txt
