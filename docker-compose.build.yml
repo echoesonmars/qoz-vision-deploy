@@ -1,4 +1,10 @@
 services:
+  vision:
+    build:
+      context: ../qoz-vision
+      dockerfile: Dockerfile
+    image: qoz-offline-vision:latest
+
   backend:
     build:
       context: ./backend
@@ -10,3 +16,4 @@ services:
       context: ./web
       dockerfile: ../Dockerfile.web
     image: qoz-offline-web:latest
+
