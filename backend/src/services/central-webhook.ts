@@ -8,7 +8,7 @@ export interface CentralIncidentPayload {
 }
 
 export async function dispatchIncidentToCentralPlatform(input: CentralIncidentPayload): Promise<void> {
-  const centralUrl = process.env.CENTRAL_DEMO_URL || "http://100.73.160.10:3000";
+  const centralUrl = (process.env.CENTRAL_DEMO_URL || "https://qoz-vision.up.railway.app").replace(/\/$/, "");
   const centralSecret = process.env.CENTRAL_SECRET || "qoz-global-secret-2026";
   const organizationName = process.env.ORGANIZATION_NAME || process.env.SCHOOL_NAME || "Школа QOZ";
 
