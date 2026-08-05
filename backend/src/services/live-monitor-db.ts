@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { dispatchIncidentToCentralPlatform } from "./central-webhook.js";
 import { getDb } from "./db.js";
 import { dedupeIncidentRows } from "./live-incident-dedup.js";
 import { assertJpegWithinLimit, assertPayloadWithinLimit } from "./live-upload-limits.js";
@@ -236,6 +237,16 @@ async function insertIncidentEventsBatch(input: {
   await sql`
     insert into public.live_incident_events ${sql(rows, "id", "snapshot_id", "session_id", "device_id", "captured_at", "incident_type", "confidence", "location_context", "description", "timestamp_marker", "evidence_storage_path")}
   `;
+  for (const inc of input.incidents) {
+    void dispatchIncidentToCentralPlatform({
+      deviceId: input.deviceId,
+      incidentType: inc.type,
+      confidence: inc.confidence,
+      description: inc.description,
+      capturedAt: input.capturedAt,
+      evidenceStoragePath: inc.evidence_storage_path,
+    });
+  }
 }
 
 export async function insertLiveSnapshot(input: {
